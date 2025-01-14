@@ -6,7 +6,7 @@ const cardTemplate = document.querySelector('#card-template').content;
 
 // @todo: Функция создания карточки
 
-function createCard(cardData) {
+function createCard(cardData, { deleteCard }) {
 
 /* Клонируем шаблона карточки вместе с содержимым (cloneNode(true)) и записываем в переменную cardContent */
 const cardContent = cardTemplate.cloneNode(true); 
@@ -52,8 +52,9 @@ const cardList = document.querySelector('.places__list');
 /* Перебираем массив карточек initialCard: на каждой итерации создаются новые карточки с помощью createCard, их сохраняем в переменную cardContent. Созданные карточки добавляем в конец контейнер cardList */
 
 initialCards.forEach(function(cardData) {
-    const cardContent = createCard(cardData);
+    const cardContent = createCard(cardData,{ deleteCard });
     cardList.append(cardContent);
   });
+
   
 
