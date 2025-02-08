@@ -1,7 +1,7 @@
 import "./index.css"; // импорт главного файла стилей
 import { initialCards } from "../components/cards.js";
 import { createCard, deleteCard, likeCard } from "../components/card.js";
-import { openPopup, closePopup } from "../components/modal.js";
+import { openPopup, closePopup, setCloseModalWindowEventListeners } from "../components/modal.js";
 
 // Находим в шаблоне контейнер, где будут сохраняться карточки, и записываем ссылку на него в переменную cardList //
 const cardList = document.querySelector(".places__list");
@@ -25,7 +25,6 @@ const editPopup = document.querySelector(".popup_type_edit");
 const imagePopup = document.querySelector(".popup_type_image");
 const newCardPopup = document.querySelector(".popup_type_new-card");
 const modalWindows = document.querySelectorAll(".popup");
-const closeButtons = document.querySelectorAll(".popup__close");
 
 // Находим значки, которые открывают попапы //
 const editButton = document.querySelector(".profile__edit-button");
@@ -61,34 +60,10 @@ addButton.addEventListener("click", function () {
   openPopup(newCardPopup);
 });
 
-// Функция для обработчиков событий для попапов 
-const setModalWindowEventListeners = () => {
-  modalWindows.forEach((popup) => {
-    if (!popup) return;
-
-    // добавляем анимацию к каждому попапу
-    popup.classList.add("popup_is-animated");
-
-    // добавляем обработчик для оверлея (закрытие при клике вне контента)
-    popup.addEventListener("click", (event) => {
-      if (event.target === popup) {
-        closePopup(popup);
-      }
-    });
-  });
-
-  // добавляем обработчики на кнопки закрытия 
-  closeButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const modalWindow = button.closest(".popup"); 
-      closePopup(modalWindow);
-    });
-  });
-};
-
-setModalWindowEventListeners ();
-
-
+// Цикл для всех модальных окон //
+modalWindows.forEach((popup) => {
+  setCloseModalWindowEventListeners(popup);
+});
 
  // Функция обработки формы с данными пользователя //
 function handleNewUserSubmit(evt) {  
