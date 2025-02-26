@@ -21,7 +21,7 @@ export function closeEsc(evt) {
   }
 }
 
-// Функция для обработчиков событий для конкретных попавов  
+// Функция для обработчиков событий для конкретных попапов 
 export const setCloseModalWindowEventListeners = (popup) => {
   if (!popup) return;
 
@@ -40,5 +40,17 @@ export const setCloseModalWindowEventListeners = (popup) => {
     closeButton.addEventListener("click", () => closePopup(popup));
   }
 };
+
+//Функция ожидания сохранения 
+export function renderLoading(button, isLoading, defaultText = "Сохранить") {
+  if (isLoading) {
+    button.textContent = "Сохранение...";
+    button.disabled = true;  
+  } else {
+    button.textContent = defaultText;
+    button.disabled = false; 
+  }
+}
+
 
 

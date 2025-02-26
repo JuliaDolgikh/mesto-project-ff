@@ -10,4 +10,12 @@
 @import url('../blocks/popup/popup.css');
 @import url('../blocks/popup/_is-animated/popup_is-animated.css');
 @import url('../blocks/popup/_is-opened/popup_is-opened.css');
+@import url('../blocks/validation/validation.css');
+@import url('../blocks/card/card_like.css'); 
+@import url('../blocks/popup/popup_confirm.css');
+@import url('../blocks/profile/avatar.css');
+
+
+
+
 

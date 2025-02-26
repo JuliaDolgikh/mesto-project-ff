@@ -1,0 +1,32 @@
+
+.form__input_type_error {
+    border-bottom-color: red;
+    }
+
+    .form__input-error {
+        color: red;
+        font-size: 12px;
+        visibility: hidden; 
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+      
+      .popup__error_visible {
+        visibility: visible; 
+        opacity: 1;
+      }
+
+      .form__input-error_active {
+        visibility: visible;
+        opacity: 1;
+
+      }
+
+      .form__submit_inactive {
+        opacity: 0.5;
+        cursor: default;
+        color: #c4c4c4; 
+        background-color: transparent; 
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        pointer-events: none;
+      }
