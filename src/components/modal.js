@@ -1,9 +1,10 @@
 
 /* Функция для открытия попапа */
 export function openPopup(popup) {
-  popup.classList.add("popup_is-opened"); // открываем попап
-  document.addEventListener("keydown", closeEsc); // добавляем обработчик закрытия по Esc
+  popup.classList.add("popup_is-opened");
+  document.addEventListener("keydown", closeEsc);
 }
+
 
 /* Функция закрытия попапа */
 export function closePopup(popup) {
