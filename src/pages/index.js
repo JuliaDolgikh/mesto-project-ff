@@ -1,7 +1,7 @@
 
 
 import "./index.css"; // импорт главного файла стилей
-import { createCard, deleteCard, likeCard} from "../components/card.js";
+import { createCard, deleteCard, likeCard, dislikeCard} from "../components/card.js";
 import { openPopup, closePopup, setCloseModalWindowEventListeners} from "../components/modal.js";
 import { enableValidation, clearValidationErrors } from "../components/validation.js";
 import { getUserData, getCards, editProfile, addNewCard, editAvatar, deleteCardFromServer, likeCardRequest, dislikeCardRequest } from "../components/api.js"; 
@@ -80,7 +80,8 @@ Promise.all([getUserData(), getCards()])
     cardList.innerHTML = "";
 
     cards.forEach(cardData => {
-      const newCard = createCard(userData._id, cardData, deleteCard, likeCard, handleImageClick, openConfirmPopup, confirmPopup, likeCardRequest, dislikeCardRequest);
+
+        const newCard = createCard(userId, cardData, deleteCard, likeCard, dislikeCard, handleImageClick, openConfirmPopup, likeCardRequest, dislikeCardRequest);
       cardList.append(newCard);
     });
   })
@@ -155,7 +156,7 @@ function handleNewCardSubmit(evt) {
       return;
     }
 
-    const newCard = createCard(userId, cardData, deleteCard, likeCard, handleImageClick, openConfirmPopup, confirmPopup, likeCardRequest, dislikeCardRequest);
+    const newCard = createCard(userId, cardData, deleteCard, likeCard, dislikeCard, handleImageClick, openConfirmPopup, likeCardRequest, dislikeCardRequest);
     cardList.prepend(newCard);
     formNewCards.reset();
     closePopup(newCardPopup);
@@ -210,11 +211,15 @@ let currentCardId = null;
 let currentCardElement = null;
 
 //Функция открытия попапа удаления 
-function openConfirmPopup(cardId, cardElement, popup) {
+function openConfirmPopup(cardId, cardElement) {
   currentCardId = cardId;
   currentCardElement = cardElement;
-  openPopup(popup);
+  openPopup(confirmPopup);
 }
+
+confirmButton.addEventListener("click", () => {
+  openConfirmPopup(currentCardId, currentCardElement);
+});
 
 
 // Функция удаления карточки

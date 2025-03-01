@@ -1,6 +1,5 @@
 
-export function createCard(userId, cardData, deleteCard, likeCard, handleImageClick, openConfirmPopup, likeCardRequest,
-  dislikeCardRequest) {
+export function createCard(userId, cardData, deleteCard, likeCard, dislikeCard, handleImageClick, openConfirmPopup, likeCardRequest, dislikeCardRequest) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.cloneNode(true).querySelector(".card");
 
@@ -11,13 +10,11 @@ export function createCard(userId, cardData, deleteCard, likeCard, handleImageCl
   const likeCount = cardElement.querySelector(".card__like-count");
 
   const defaultImage = "../images/card_1.jpg";
-
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
   cardTitle.textContent = cardData.name;
   likeCount.textContent = cardData.likes.length;
   cardImage.src = cardData.link || defaultImage;
-
 
   //Проверяем, поставил ли пользователь лайк
   if (cardData.likes.some(like => like._id === userId)) {
@@ -32,10 +29,15 @@ export function createCard(userId, cardData, deleteCard, likeCard, handleImageCl
     deleteCard(cardElement, cardData._id, openConfirmPopup);
   });
 }
-
   //Добавляем обработчики на лайк и изображение
-  likeButton.addEventListener("click", () => likeCard(likeButton, likeCount, cardData._id, userId, likeCardRequest,
-    dislikeCardRequest));
+  likeButton.addEventListener("click", () => {
+    if (likeButton.classList.contains("card__like-button_is-active")) {
+      dislikeCard(likeButton, likeCount, cardData._id, userId, dislikeCardRequest);
+    } else {
+      likeCard(likeButton, likeCount, cardData._id, userId,  likeCardRequest);
+    }
+  });  
+
   cardImage.addEventListener("click", () => handleImageClick(cardData));
 
    // Добавляем ID владельца в dataset
@@ -44,39 +46,43 @@ export function createCard(userId, cardData, deleteCard, likeCard, handleImageCl
   return cardElement;
 }
 
-export function deleteCard(cardElement, cardId, openConfirmPopup, confirmPopup) {
-
-  if (!openConfirmPopup || !confirmPopup) {
-    console.error("Ошибка: openConfirmPopup или confirmPopup не переданы!");
-    return;
-  }
-  openConfirmPopup(cardId, cardElement, confirmPopup); 
+export function deleteCard(cardElement, cardId, openConfirmPopup) {
+  openConfirmPopup(cardId, cardElement); 
 }
 
 
 // Функция для лайка
+export function likeCard(likeButton, likeCount, cardId, userId, likeCardRequest) {
+  
+  likeCardRequest(cardId)
+    .then(updatedCard => {
+      console.log("Лайк добавлен:", updatedCard.likes);
+      updateLikeUI(likeButton, likeCount, updatedCard.likes, userId);
+    })
+    .catch(err => console.error("Ошибка при лайке карточки:", err));
+}
 
-export function likeCard(likeButton, likeCount, cardId, userId, likeCardRequest, dislikeCardRequest) {
+export function dislikeCard(likeButton, likeCount, cardId, userId, dislikeCardRequest) {
   if (!cardId) {
     console.error("Ошибка: cardId не передан!");
     return;
   }
 
-  const isLiked = likeButton.classList.contains("card__like-button_is-active");
-  //  Выбираем, какую функцию API вызывать
-  const request = isLiked ? dislikeCardRequest : likeCardRequest;
-
-  request(cardId)
+  dislikeCardRequest(cardId)
     .then(updatedCard => {
-      console.log("Обновленный список лайков:", updatedCard.likes);
-      likeCount.textContent = updatedCard.likes.length;
-      if (updatedCard.likes.some(like => like._id === userId)) {
-        likeButton.classList.add("card__like-button_is-active");
-      } else {
-        likeButton.classList.remove("card__like-button_is-active");
-      }
+      console.log("Лайк удалён:", updatedCard.likes);
+      updateLikeUI(likeButton, likeCount, updatedCard.likes, userId);
     })
-    .catch(err => console.error("Ошибка при лайке карточки:", err));
+    .catch(err => console.error("Ошибка при дизлайке карточки:", err));
+
 }
 
-
+// Функция обновления после лайка/дизлайка
+function updateLikeUI(likeButton, likeCount, likes, userId) {
+  likeCount.textContent = likes.length;
+  if (likes.some(like => like._id === userId)) {
+    likeButton.classList.add("card__like-button_is-active");
+  } else {
+    likeButton.classList.remove("card__like-button_is-active");
+  }
+}
