@@ -151,7 +151,7 @@ function handleNewCardSubmit(evt) {
   addNewCard(name, link)
   .then(cardData => {
     if (document.querySelector(`[data-card-id="${cardData._id}"]`)) {
-      console.warn("⚠️ Карточка уже есть в списке, не добавляем повторно.");
+      console.warn("Карточка уже есть в списке, не добавляем повторно.");
       return;
     }
 
@@ -209,17 +209,10 @@ formNewCards.addEventListener("submit", handleNewCardSubmit);
 let currentCardId = null;
 let currentCardElement = null;
 
-//Обработчик события от `card.js` 
-document.addEventListener("openConfirmPopup", (event) => {
-  const { cardId, cardElement } = event.detail;
-  openConfirmPopup(cardId, cardElement);
-});
-
-//Функция открытия попапа удаления (вызывает `openPopup`)
+//Функция открытия попапа удаления 
 function openConfirmPopup(cardId, cardElement, popup) {
   currentCardId = cardId;
   currentCardElement = cardElement;
-
   openPopup(popup);
 }
 

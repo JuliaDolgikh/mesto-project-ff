@@ -42,16 +42,6 @@ export const setCloseModalWindowEventListeners = (popup) => {
   }
 };
 
-//Функция ожидания сохранения 
-export function renderLoading(button, isLoading, defaultText = "Сохранить") {
-  if (isLoading) {
-    button.textContent = "Сохранение...";
-    button.disabled = true;  
-  } else {
-    button.textContent = defaultText;
-    button.disabled = false; 
-  }
-}
 
 
 

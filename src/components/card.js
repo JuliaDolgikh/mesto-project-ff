@@ -1,5 +1,5 @@
 
-export function createCard(userId, cardData, deleteCard, likeCard, handleImageClick, openConfirmPopup, confirmPopup, likeCardRequest,
+export function createCard(userId, cardData, deleteCard, likeCard, handleImageClick, openConfirmPopup, likeCardRequest,
   dislikeCardRequest) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.cloneNode(true).querySelector(".card");
@@ -29,7 +29,7 @@ export function createCard(userId, cardData, deleteCard, likeCard, handleImageCl
     deleteButton.remove();
   } else {
     deleteButton.addEventListener("click", () => {
-    deleteCard(cardElement, cardData._id, openConfirmPopup, confirmPopup);
+    deleteCard(cardElement, cardData._id, openConfirmPopup);
   });
 }
 
@@ -50,8 +50,7 @@ export function deleteCard(cardElement, cardId, openConfirmPopup, confirmPopup) 
     console.error("Ошибка: openConfirmPopup или confirmPopup не переданы!");
     return;
   }
-
-  openConfirmPopup(cardId, cardElement, confirmPopup); // Передаём pop-up явно
+  openConfirmPopup(cardId, cardElement, confirmPopup); 
 }
 
 
@@ -63,19 +62,14 @@ export function likeCard(likeButton, likeCount, cardId, userId, likeCardRequest,
     return;
   }
 
-  console.log(`Лайк от пользователя: ${userId}, cardId: ${cardId}`);
-
   const isLiked = likeButton.classList.contains("card__like-button_is-active");
-
-  // 📌 Выбираем, какую функцию API вызывать
+  //  Выбираем, какую функцию API вызывать
   const request = isLiked ? dislikeCardRequest : likeCardRequest;
 
   request(cardId)
     .then(updatedCard => {
       console.log("Обновленный список лайков:", updatedCard.likes);
-
       likeCount.textContent = updatedCard.likes.length;
-
       if (updatedCard.likes.some(like => like._id === userId)) {
         likeButton.classList.add("card__like-button_is-active");
       } else {
