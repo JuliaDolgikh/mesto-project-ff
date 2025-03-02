@@ -229,10 +229,6 @@ const handleDeleteCard = () => {
 
 // Вешаем обработчик на кнопку подтверждения удаления 
 confirmButton.addEventListener("click", handleDeleteCard);
-// Вешаем обработчик на кнопку подтверждения 
-if (confirmButton) {
-  confirmButton.addEventListener("click", handleDeleteCard);
-} 
 
 
 //Функция ожидания сохранения 
