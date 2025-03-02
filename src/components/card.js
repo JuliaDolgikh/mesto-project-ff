@@ -1,5 +1,5 @@
 
-export function createCard(userId, cardData, deleteCard, likeCard, dislikeCard, handleImageClick, openConfirmPopup, likeCardRequest, dislikeCardRequest) {
+export function createCard(userId, cardData, likeCard, dislikeCard, handleImageClick, openPopupDelete, likeCardRequest, dislikeCardRequest) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.cloneNode(true).querySelector(".card");
 
@@ -26,8 +26,8 @@ export function createCard(userId, cardData, deleteCard, likeCard, dislikeCard, 
     deleteButton.remove();
   } else {
     deleteButton.addEventListener("click", () => {
-    deleteCard(cardElement, cardData._id, openConfirmPopup);
-  });
+      openPopupDelete(cardData._id, cardElement);
+    });
 }
   //Добавляем обработчики на лайк и изображение
   likeButton.addEventListener("click", () => {
@@ -46,17 +46,10 @@ export function createCard(userId, cardData, deleteCard, likeCard, dislikeCard, 
   return cardElement;
 }
 
-export function deleteCard(cardElement, cardId, openConfirmPopup) {
-  openConfirmPopup(cardId, cardElement); 
-}
-
-
 // Функция для лайка
 export function likeCard(likeButton, likeCount, cardId, userId, likeCardRequest) {
-  
   likeCardRequest(cardId)
     .then(updatedCard => {
-      console.log("Лайк добавлен:", updatedCard.likes);
       updateLikeUI(likeButton, likeCount, updatedCard.likes, userId);
     })
     .catch(err => console.error("Ошибка при лайке карточки:", err));
@@ -70,7 +63,6 @@ export function dislikeCard(likeButton, likeCount, cardId, userId, dislikeCardRe
 
   dislikeCardRequest(cardId)
     .then(updatedCard => {
-      console.log("Лайк удалён:", updatedCard.likes);
       updateLikeUI(likeButton, likeCount, updatedCard.likes, userId);
     })
     .catch(err => console.error("Ошибка при дизлайке карточки:", err));

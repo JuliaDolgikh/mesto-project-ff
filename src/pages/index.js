@@ -1,7 +1,7 @@
 
 
 import "./index.css"; // импорт главного файла стилей
-import { createCard, deleteCard, likeCard, dislikeCard} from "../components/card.js";
+import { createCard, likeCard, dislikeCard} from "../components/card.js";
 import { openPopup, closePopup, setCloseModalWindowEventListeners} from "../components/modal.js";
 import { enableValidation, clearValidationErrors } from "../components/validation.js";
 import { getUserData, getCards, editProfile, addNewCard, editAvatar, deleteCardFromServer, likeCardRequest, dislikeCardRequest } from "../components/api.js"; 
@@ -81,7 +81,7 @@ Promise.all([getUserData(), getCards()])
 
     cards.forEach(cardData => {
 
-        const newCard = createCard(userId, cardData, deleteCard, likeCard, dislikeCard, handleImageClick, openConfirmPopup, likeCardRequest, dislikeCardRequest);
+        const newCard = createCard(userId, cardData, likeCard, dislikeCard, handleImageClick, openPopupDelete, likeCardRequest, dislikeCardRequest);
       cardList.append(newCard);
     });
   })
@@ -156,7 +156,7 @@ function handleNewCardSubmit(evt) {
       return;
     }
 
-    const newCard = createCard(userId, cardData, deleteCard, likeCard, dislikeCard, handleImageClick, openConfirmPopup, likeCardRequest, dislikeCardRequest);
+    const newCard = createCard(userId, cardData, likeCard, dislikeCard, handleImageClick, openPopupDelete, likeCardRequest, dislikeCardRequest);
     cardList.prepend(newCard);
     formNewCards.reset();
     closePopup(newCardPopup);
@@ -206,39 +206,29 @@ closeAvatarPopup.addEventListener("click", () => closePopup(avatarPopup));
 editForm.addEventListener("submit", handleNewUserSubmit);
 formNewCards.addEventListener("submit", handleNewCardSubmit);
 
-
 let currentCardId = null;
 let currentCardElement = null;
 
-//Функция открытия попапа удаления 
-function openConfirmPopup(cardId, cardElement) {
+const openPopupDelete = (cardId, card) => {
   currentCardId = cardId;
-  currentCardElement = cardElement;
-  openPopup(confirmPopup);
-}
+  currentCardElement = card;
+  openPopup(confirmPopup); // Открываем попап удаления
+};
 
-confirmButton.addEventListener("click", () => {
-  openConfirmPopup(currentCardId, currentCardElement);
-});
-
-
-// Функция удаления карточки
-function handleDeleteCard() {
-
+const handleDeleteCard = () => {
   if (!currentCardId || !currentCardElement) {
     return;
   }
-
-  deleteCardFromServer(currentCardId)
+  deleteCardFromServer(currentCardId) // Функция запроса на удаление карточки
     .then(() => {
-      currentCardElement.remove();
-      closePopup(confirmPopup);
+      currentCardElement.remove(); // Удаляем элемент карточки из DOM
+      closePopup(confirmPopup); // Закрываем попап
     })
-    .catch((err) => {
-      console.error("Ошибка при удалении карточки:", err);
-    });
-}
+    .catch(err => console.error("Ошибка при удалении карточки:", err));
+};
 
+// Вешаем обработчик на кнопку подтверждения удаления 
+confirmButton.addEventListener("click", handleDeleteCard);
 // Вешаем обработчик на кнопку подтверждения 
 if (confirmButton) {
   confirmButton.addEventListener("click", handleDeleteCard);
